@@ -1,0 +1,16 @@
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\bin\Release\netcoreapp3.1\MiniJava_Compiler.exe
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\bin\Release\netcoreapp3.1\MiniJava_Compiler.deps.json
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\bin\Release\netcoreapp3.1\MiniJava_Compiler.runtimeconfig.json
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\bin\Release\netcoreapp3.1\MiniJava_Compiler.runtimeconfig.dev.json
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\bin\Release\netcoreapp3.1\MiniJava_Compiler.dll
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\bin\Release\netcoreapp3.1\MiniJava_Compiler.pdb
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\obj\Release\netcoreapp3.1\MiniJava_Compiler.csprojAssemblyReference.cache
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\obj\Release\netcoreapp3.1\MiniJava_Compiler.MiniJava.resources
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\obj\Release\netcoreapp3.1\MiniJava_Compiler.Properties.Resources.resources
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\obj\Release\netcoreapp3.1\MiniJava_Compiler.csproj.GenerateResource.cache
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\obj\Release\netcoreapp3.1\MiniJava_Compiler.AssemblyInfoInputs.cache
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\obj\Release\netcoreapp3.1\MiniJava_Compiler.AssemblyInfo.cs
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\obj\Release\netcoreapp3.1\MiniJava_Compiler.csproj.CoreCompileInputs.cache
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\obj\Release\netcoreapp3.1\MiniJava_Compiler.dll
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\obj\Release\netcoreapp3.1\MiniJava_Compiler.pdb
+C:\Users\Mallou\Desktop\Compilation\MiniJava_Compiler\obj\Release\netcoreapp3.1\MiniJava_Compiler.genruntimeconfig.cache
