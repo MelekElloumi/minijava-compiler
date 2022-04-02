@@ -56,10 +56,13 @@
 Program		           : MainClass ClassDeclarationS
                        | MainClass
                        | error ClassDeclarationS {syntaxerror ("main class missing"); }
+                       | error MainClass ClassDeclarationS {syntaxerror ("code out of class"); }
                        | MainClass error ClassDeclarationS {syntaxerror ("code out of class"); }
                        | MainClass ClassDeclarationS error {syntaxerror ("code out of class"); }
                        ;
 MainClass              : KEYWORD_CLASS Identifier BRACE_OPEN KEYWORD_PUBLIC KEYWORD_MAIN PARENTHESE_OPEN TYPE_STRING BRACKET_OPEN BRACKET_CLOSE IDENTIFIER PARENTHESE_CLOSE BRACE_OPEN MethodBody BRACE_CLOSE BRACE_CLOSE
+                       | KEYWORD_CLASS Identifier BRACE_OPEN error KEYWORD_PUBLIC KEYWORD_MAIN PARENTHESE_OPEN TYPE_STRING BRACKET_OPEN BRACKET_CLOSE IDENTIFIER PARENTHESE_CLOSE BRACE_OPEN MethodBody BRACE_CLOSE BRACE_CLOSE {syntaxerror ("public keyword missing");}
+                       | KEYWORD_CLASS Identifier BRACE_OPEN error KEYWORD_MAIN PARENTHESE_OPEN TYPE_STRING BRACKET_OPEN BRACKET_CLOSE IDENTIFIER PARENTHESE_CLOSE BRACE_OPEN MethodBody BRACE_CLOSE BRACE_CLOSE {syntaxerror ("public keyword missing");}
                        | error Identifier BRACE_OPEN KEYWORD_PUBLIC KEYWORD_MAIN PARENTHESE_OPEN TYPE_STRING BRACKET_OPEN BRACKET_CLOSE IDENTIFIER PARENTHESE_CLOSE BRACE_OPEN MethodBody BRACE_CLOSE BRACE_CLOSE {syntaxerror ("class keyword missing"); }
                        | KEYWORD_CLASS error BRACE_OPEN KEYWORD_PUBLIC KEYWORD_MAIN PARENTHESE_OPEN TYPE_STRING BRACKET_OPEN BRACKET_CLOSE IDENTIFIER PARENTHESE_CLOSE BRACE_OPEN MethodBody BRACE_CLOSE BRACE_CLOSE {syntaxerror ("class identifier missing"); }
                        | KEYWORD_CLASS Identifier BRACE_OPEN KEYWORD_PUBLIC KEYWORD_MAIN PARENTHESE_OPEN TYPE_STRING BRACKET_OPEN BRACKET_CLOSE IDENTIFIER PARENTHESE_CLOSE BRACE_OPEN MethodBody error BRACE_CLOSE {syntaxerror ("closing brace missing"); }
@@ -83,56 +86,58 @@ VarDeclarationS        : VarDeclaration VarDeclarationS
                        | VarDeclaration
                        |
                        ;
-VarDeclaration         : Variable SEMI_COLON
-                       | Variable error {syntaxerror ("semicolon missing"); }
+VarDeclaration         : Type Identifier SEMI_COLON
+                       | Type Identifier error {syntaxerror ("semicolon missing"); }
                        ;
 VariableS              : Variable COMMA VariableS
                        | Variable
                        | Variable error VariableS {syntaxerror ("comma missing"); }
                        ;
 Variable               : Type Identifier
-                       | Type error {syntaxerror("invalid identifier"); }
                        ;
 MethodDeclarationS     : MethodDeclaration MethodDeclarationS
                        | MethodDeclaration
                        |
                        | MethodDeclaration error MethodDeclarationS {syntaxerror ("code out of method"); }
+                       | MethodDeclaration MethodDeclarationS error {syntaxerror ("code out of method"); }
                        ;
 MethodDeclaration      : KEYWORD_PUBLIC Variable PARENTHESE_OPEN VariableS PARENTHESE_CLOSE BRACE_OPEN MethodBody KEYWORD_RETURN Expression SEMI_COLON BRACE_CLOSE
+                       | error KEYWORD_PUBLIC Variable PARENTHESE_OPEN VariableS PARENTHESE_CLOSE BRACE_OPEN MethodBody KEYWORD_RETURN Expression SEMI_COLON BRACE_CLOSE {syntaxerror ("public keyword missing"); }
                        | error Variable PARENTHESE_OPEN VariableS PARENTHESE_CLOSE BRACE_OPEN MethodBody KEYWORD_RETURN Expression SEMI_COLON BRACE_CLOSE {syntaxerror ("public keyword missing"); }
                        | KEYWORD_PUBLIC error PARENTHESE_OPEN VariableS PARENTHESE_CLOSE BRACE_OPEN MethodBody KEYWORD_RETURN Expression SEMI_COLON BRACE_CLOSE {syntaxerror ("method name missing"); }
                        | KEYWORD_PUBLIC Variable PARENTHESE_OPEN VariableS error BRACE_OPEN MethodBody KEYWORD_RETURN Expression SEMI_COLON BRACE_CLOSE {syntaxerror ("closing parentheses missing"); }
                        | KEYWORD_PUBLIC Variable PARENTHESE_OPEN VariableS PARENTHESE_CLOSE BRACE_OPEN MethodBody error SEMI_COLON BRACE_CLOSE {syntaxerror ("return keyword missing"); }
                        | KEYWORD_PUBLIC Variable PARENTHESE_OPEN VariableS PARENTHESE_CLOSE BRACE_OPEN MethodBody KEYWORD_RETURN Expression error BRACE_CLOSE {syntaxerror ("semicolon missing"); }
                        | KEYWORD_PUBLIC Variable PARENTHESE_OPEN VariableS PARENTHESE_CLOSE BRACE_OPEN MethodBody KEYWORD_RETURN Expression SEMI_COLON error {syntaxerror ("closing brace missing"); }
+                       | KEYWORD_PUBLIC Variable PARENTHESE_OPEN VariableS PARENTHESE_CLOSE error MethodBody KEYWORD_RETURN Expression SEMI_COLON BRACE_CLOSE {syntaxerror ("open brace missing"); }
                        ;
-MethodBody             : VarDeclarationS StatementS
-                       | StatementS
+MethodBody             : StatementS
+                       | VarDeclarationS StatementS
                        | error VarDeclarationS {syntaxerror ("variable declaration not first"); }
                        ;
 Type                   : TYPE_INT BRACKET_OPEN BRACKET_CLOSE
                        | TYPE_BOOLEAN
                        | TYPE_INT
                        | TYPE_STRING
-                       | Identifier
+                 //      | Identifier
                        | TYPE_INT BRACKET_OPEN error {syntaxerror ("closing bracket missing"); }
                        | error BRACKET_OPEN BRACKET_CLOSE {syntaxerror ("invalid array type"); }
                        | TYPE_INT error BRACKET_CLOSE {syntaxerror ("opening bracket missing"); }
-                       | error {syntaxerror ("invalid type"); }
                        ;
 StatementS             : Statement StatementS
                        | Statement
+                       |
                        ;
 Statement              : BRACE_OPEN StatementS BRACE_CLOSE
                        | BRACE_OPEN StatementS error {syntaxerror ("closing brace missing"); }
-                       | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE Statement KEYWORD_ELSE Statement
+                       | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS KEYWORD_ELSE StatementS
                        | KEYWORD_IF PARENTHESE_OPEN Expression error Statement KEYWORD_ELSE Statement {syntaxerror ("closing parentheses missing"); }
-                       | KEYWORD_IF error Statement KEYWORD_ELSE Statement {syntaxerror ("if condition missing"); }
-                       | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE Statement
+                       | KEYWORD_IF error StatementS KEYWORD_ELSE Statement {syntaxerror ("if condition missing"); }
+                       | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
                        | KEYWORD_IF PARENTHESE_OPEN Expression error Statement {syntaxerror ("closing parentheses missing"); }
-                       | KEYWORD_IF error Statement {syntaxerror ("if condition missing"); }
-                       | KEYWORD_WHILE PARENTHESE_OPEN Expression PARENTHESE_CLOSE Statement
-                       | KEYWORD_WHILE PARENTHESE_OPEN Expression error Statement {syntaxerror ("closing parentheses missing"); }
+                       | KEYWORD_IF error StatementS {syntaxerror ("if condition missing"); }
+                       | KEYWORD_WHILE PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
+                       | KEYWORD_WHILE PARENTHESE_OPEN Expression error StatementS {syntaxerror ("closing parentheses missing"); }
                        | KEYWORD_WHILE error Statement {syntaxerror ("while condition missing"); }
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression PARENTHESE_CLOSE SEMI_COLON
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression PARENTHESE_CLOSE error {syntaxerror ("semicolon missing"); }
@@ -166,6 +171,7 @@ ExpressionComp         : Operator Expression ExpressionComp
                        | BRACKET_OPEN Expression BRACKET_CLOSE ExpressionComp
                        | BRACKET_OPEN Expression error ExpressionComp  {syntaxerror ("closing bracket missing"); }
                        | DOT KEYWORD_LENGTH ExpressionComp
+                       | DOT error KEYWORD_LENGTH ExpressionComp {syntaxerror ("invalid .length"); }
                        | DOT Identifier PARENTHESE_OPEN ExpressionS PARENTHESE_CLOSE ExpressionComp
                        | DOT error PARENTHESE_OPEN ExpressionS PARENTHESE_CLOSE ExpressionComp {syntaxerror("invalid identifier"); }
                        | DOT Identifier error ExpressionS PARENTHESE_CLOSE ExpressionComp {syntaxerror("opening parentheses missing"); }
@@ -179,6 +185,7 @@ ExpressionComp         : Operator Expression ExpressionComp
 ExpressionS            : Expression COMMA ExpressionS
                        | Expression
                        | Expression error ExpressionS {syntaxerror ("comma missing"); }
+                       | Expression COMMA error ExpressionS {syntaxerror ("no expression after comma"); }
                        ;
 Operator               : OP_ADD
                        | OP_AND

@@ -1870,6 +1870,7 @@ int main(int argc, char *argv[])
 void yyerror(const char *str)
 {
     i++;
+
     if(str[0]=='s'){
         char errstr[1000];
         char linestr[20];
