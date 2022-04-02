@@ -16,13 +16,127 @@ namespace MiniJava_Compiler
 {
     public partial class MiniJava : Form
     {
+        private bool _isKeyDown = false;
         public MiniJava()
         {
             InitializeComponent();
         }
 
+        public int getWidth()
+        {
+            int w = 25;
+            // get total lines of richTextBox1    
+            int line = richTextBox2.Lines.Length;
+
+            if (line <= 99)
+            {
+                w = 20 + (int)richTextBox2.Font.Size;
+            }
+            else if (line <= 999)
+            {
+                w = 30 + (int)richTextBox2.Font.Size;
+            }
+            else
+            {
+                w = 50 + (int)richTextBox2.Font.Size;
+            }
+
+            return w;
+        }
+
+        public void AddLineNumbers()
+        {
+            // create & set Point pt to (0,0)    
+            Point pt = new Point(0, 0);
+            // get First Index & First Line from richTextBox1    
+            int First_Index = richTextBox2.GetCharIndexFromPosition(pt);
+            int First_Line = richTextBox2.GetLineFromCharIndex(First_Index);
+            // set X & Y coordinates of Point pt to ClientRectangle Width & Height respectively    
+            pt.X = ClientRectangle.Width;
+            pt.Y = ClientRectangle.Height;
+            // get Last Index & Last Line from richTextBox1    
+            int Last_Index = richTextBox2.GetCharIndexFromPosition(pt);
+            int Last_Line = richTextBox2.GetLineFromCharIndex(Last_Index);
+            // set Center alignment to LineNumberTextBox    
+            LineNumberTextBox.SelectionAlignment = HorizontalAlignment.Center;
+            // set LineNumberTextBox text to null & width to getWidth() function value    
+            LineNumberTextBox.Text = "";
+            LineNumberTextBox.Width = getWidth();
+            LineNumberTextBox.ZoomFactor = richTextBox2.ZoomFactor;
+            // now add each line number to LineNumberTextBox upto last line    
+            for (int i = First_Line; i <= Last_Line + 2; i++)
+            {
+                LineNumberTextBox.Text += i + 1 + "\n";
+            }
+        }
+        private void MiniJava_Load(object sender, EventArgs e)
+        {
+            LineNumberTextBox.Font = richTextBox2.Font;
+            richTextBox2.Select();
+            AddLineNumbers();
+        }
+
+        private void MiniJava_Resize(object sender, EventArgs e)
+        {
+            AddLineNumbers();
+        }
+
+        private void richTextBox2_SelectionChanged(object sender, EventArgs e)
+        {
+            Point pt = richTextBox2.GetPositionFromCharIndex(richTextBox2.SelectionStart);
+            if (pt.X == 1)
+            {
+                AddLineNumbers();
+            }
+        }
+        private void richTextBox2_MouseWheel(object sender, MouseEventArgs e)
+        {
+            //check if key has been pressed
+            if (_isKeyDown == true)
+            {
+                //if yes handle the event
+                ((HandledMouseEventArgs)e).Handled = true;
+            }
+        }
+
+        private void richTextBox2_KeyDown(object sender, KeyEventArgs e)
+        {
+            //set flag to true when key is pressed
+            _isKeyDown = e.Control;
+        }
+
+        private void richTextBox2_KeyUp(object sender, KeyEventArgs e)
+        {
+            //set flag to false when key has been released
+            _isKeyDown = e.Control;
+        }
+
+        private void richTextBox2_VScroll(object sender, EventArgs e)
+        {
+            LineNumberTextBox.Text = "";
+            AddLineNumbers();
+            LineNumberTextBox.Invalidate();
+        }
+
+        private void richTextBox2_FontChanged(object sender, EventArgs e)
+        {
+            LineNumberTextBox.Font = richTextBox2.Font;
+            richTextBox2.Select();
+            AddLineNumbers();
+        }
+
+        private void LineNumberTextBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            richTextBox1.Select();
+            LineNumberTextBox.DeselectAll();
+        }
+
         private void richTextBox2_TextChanged(object sender, EventArgs e)
         {
+            if (richTextBox2.Text == "")
+            {
+                AddLineNumbers();
+            }
             // getting keywords/functions
             string keywords = @"\b(System.out.println|public|class|static|void|main|extends|this|new)\b";
             MatchCollection keywordMatches = Regex.Matches(richTextBox2.Text, keywords);
