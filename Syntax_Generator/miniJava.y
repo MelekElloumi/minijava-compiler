@@ -6,7 +6,6 @@
 	extern int yylineno;
 	extern int i;
 %}
-%error-verbose
 
 %token IDENTIFIER
 %token TYPE_INT
@@ -86,14 +85,16 @@ VarDeclarationS        : VarDeclaration VarDeclarationS
                        | VarDeclaration
                        |
                        ;
-VarDeclaration         : Type Identifier SEMI_COLON
-                       | Type Identifier error {syntaxerror ("semicolon missing"); }
+VarDeclaration         : Variable SEMI_COLON
+                       | Variable error {syntaxerror ("semicolon missing"); }
                        ;
 VariableS              : Variable COMMA VariableS
                        | Variable
                        | Variable error VariableS {syntaxerror ("comma missing"); }
                        ;
 Variable               : Type Identifier
+                       | error Identifier {syntaxerror ("invalid type"); }
+                       | Type error {syntaxerror ("invalid identifier"); }
                        ;
 MethodDeclarationS     : MethodDeclaration MethodDeclarationS
                        | MethodDeclaration
@@ -130,11 +131,13 @@ StatementS             : Statement StatementS
                        ;
 Statement              : BRACE_OPEN StatementS BRACE_CLOSE
                        | BRACE_OPEN StatementS error {syntaxerror ("closing brace missing"); }
+                       | error StatementS BRACE_CLOSE {syntaxerror ("opening brace missing"); }
                        | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS KEYWORD_ELSE StatementS
-                       | KEYWORD_IF PARENTHESE_OPEN Expression error Statement KEYWORD_ELSE Statement {syntaxerror ("closing parentheses missing"); }
-                       | KEYWORD_IF error StatementS KEYWORD_ELSE Statement {syntaxerror ("if condition missing"); }
+                       | KEYWORD_IF error Expression PARENTHESE_CLOSE StatementS KEYWORD_ELSE StatementS {syntaxerror ("opening parentheses missing"); }
+                       | KEYWORD_IF PARENTHESE_OPEN Expression error Statement KEYWORD_ELSE StatementS {syntaxerror ("closing parentheses missing"); }
+                       | KEYWORD_IF error StatementS KEYWORD_ELSE StatementS {syntaxerror ("if condition missing"); }
                        | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
-                       | KEYWORD_IF PARENTHESE_OPEN Expression error Statement {syntaxerror ("closing parentheses missing"); }
+                       | KEYWORD_IF PARENTHESE_OPEN Expression error StatementS {syntaxerror ("closing parentheses missing"); }
                        | KEYWORD_IF error StatementS {syntaxerror ("if condition missing"); }
                        | KEYWORD_WHILE PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
                        | KEYWORD_WHILE PARENTHESE_OPEN Expression error StatementS {syntaxerror ("closing parentheses missing"); }
@@ -147,6 +150,7 @@ Statement              : BRACE_OPEN StatementS BRACE_CLOSE
                        | Identifier OP_AFFECT error SEMI_COLON {syntaxerror ("second expression missing"); }
                        | Identifier error Expression SEMI_COLON{syntaxerror ("'=' expected"); }
                        | Identifier BRACKET_OPEN Expression BRACKET_CLOSE OP_AFFECT Expression SEMI_COLON
+                       | Identifier error Expression BRACKET_CLOSE OP_AFFECT Expression SEMI_COLON {syntaxerror ("opening bracket missing"); }
                        | Identifier BRACKET_OPEN Expression error OP_AFFECT Expression SEMI_COLON {syntaxerror ("closing bracket missing"); }
                        | Identifier BRACKET_OPEN Expression BRACKET_CLOSE error Expression SEMI_COLON {syntaxerror ("'=' expected"); }
                        | Identifier BRACKET_OPEN Expression BRACKET_CLOSE OP_AFFECT Expression error {syntaxerror ("semicolon missing"); }
@@ -157,14 +161,20 @@ Expression             : INTEGER_LITERAL ExpressionComp
                        | Identifier ExpressionComp
                        | KEYWORD_THIS ExpressionComp
                        | KEYWORD_NEW TYPE_INT BRACKET_OPEN Expression BRACKET_CLOSE ExpressionComp
+                       | KEYWORD_NEW TYPE_INT error Expression BRACKET_CLOSE ExpressionComp {syntaxerror ("opening bracket missing"); }
                        | KEYWORD_NEW error BRACKET_OPEN Expression BRACKET_CLOSE ExpressionComp {syntaxerror ("invalid array type"); }
                        | KEYWORD_NEW TYPE_INT BRACKET_OPEN Expression error ExpressionComp {syntaxerror ("closing bracket missing"); }
                        | KEYWORD_NEW Identifier PARENTHESE_OPEN PARENTHESE_CLOSE ExpressionComp
+                       | KEYWORD_NEW error PARENTHESE_OPEN PARENTHESE_CLOSE ExpressionComp {syntaxerror ("invalid identifier"); }
+                       | KEYWORD_NEW Identifier error PARENTHESE_CLOSE ExpressionComp {syntaxerror ("opening parentheses missing"); }
                        | KEYWORD_NEW Identifier PARENTHESE_OPEN error ExpressionComp {syntaxerror ("closing parentheses missing"); }
                        | KEYWORD_NEW Identifier PARENTHESE_OPEN ExpressionS PARENTHESE_CLOSE ExpressionComp
+                       | KEYWORD_NEW error PARENTHESE_OPEN ExpressionS PARENTHESE_CLOSE ExpressionComp {syntaxerror ("invalid identifier"); }
+                       | KEYWORD_NEW Identifier error ExpressionS PARENTHESE_CLOSE ExpressionComp {syntaxerror ("opening parentheses missing"); }
                        | KEYWORD_NEW Identifier PARENTHESE_OPEN ExpressionS error ExpressionComp {syntaxerror ("closing parentheses missing"); }
                        | OP_NOT Expression ExpressionComp
                        | PARENTHESE_OPEN Expression PARENTHESE_CLOSE ExpressionComp
+                       | error Expression PARENTHESE_CLOSE ExpressionComp {syntaxerror ("opening parentheses missing"); }
                        | PARENTHESE_OPEN Expression error ExpressionComp {syntaxerror ("closing parentheses missing"); }
                        ;
 ExpressionComp         : Operator Expression ExpressionComp

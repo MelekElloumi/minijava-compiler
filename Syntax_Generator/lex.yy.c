@@ -1871,7 +1871,7 @@ void yyerror(const char *str)
 {
     i++;
 
-    if(str[0]=='s'){
+    /*if(str[0]=='s'){
         char errstr[1000];
         char linestr[20];
         strncpy(errstr, str, 12);
@@ -1881,7 +1881,7 @@ void yyerror(const char *str)
         strcat(errstr, str + 12);
         errstr[0]='S';
         strcpy(str,errstr);
-    }
+    }*/
     fprintf(stderr,"#  %s\n",str);
 }
 
