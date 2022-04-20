@@ -254,7 +254,7 @@ namespace MiniJava_Compiler
             MatchCollection errorMatches = Regex.Matches(richTextBox1.Text, error);
 
             // getting types/classes from the text 
-            string synlex = @"\b(Lexical|Syntax)\b";
+            string synlex = @"\b(Lexical|Syntax|syntax)\b";
             MatchCollection synlexMatches = Regex.Matches(richTextBox1.Text, synlex);
 
             // getting types/classes from the text 

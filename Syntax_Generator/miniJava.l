@@ -5,11 +5,15 @@
  #include <math.h>
  #include "miniJava.tab.h"
 
-	int i=0;
+int i=0;
+extern char nom[];
 
  void yyerror(char const *msg);
- void lexicerror (int type, const char *msg);
+ void lexicerror ( const char *msg);
  void syntaxerror (const char *str);
+ void semanticerror (const char *str);
+ void semanticwarning (const char *str);
+ char* concat(char* s1, char* s2);
 %}
 
 %option yylineno
@@ -59,9 +63,9 @@ Error_comment                   \/\*([^(\*\/)]|\n)*
 "String"                              return TYPE_STRING;
 
 {Boolean}							  return BOOLEAN_LITERAL;
-{Integer}                             return INTEGER_LITERAL;
+{Integer}                             {yylval = atoi(yytext);return INTEGER_LITERAL;}
 {String}							  return STRING_LITERAL;
-{Identifier}                          return IDENTIFIER;
+{Identifier}                          {strcpy(nom, yytext);return IDENTIFIER;}
 
 {Parenthese_open}                     return PARENTHESE_OPEN;
 {Parenthese_close}                    return PARENTHESE_CLOSE;
@@ -88,10 +92,10 @@ Error_comment                   \/\*([^(\*\/)]|\n)*
 {Comment_line}         				  /* no actions */
 {Comment_block}         		      /* no actions */
 
-{Error_identifier}                    {lexicerror(1,"illegal identifier");}
-{Error_comment}                    	  {lexicerror(2,"unclosed comment");}
-{Error_string}                    	  {lexicerror(2,"unclosed string");}
-{Error_character}                     {lexicerror(1,"illegal character");}
+{Error_identifier}                    {lexicerror(concat("illegal identifier ", yytext));}
+{Error_comment}                    	  {lexicerror("unclosed comment");}
+{Error_string}                    	  {lexicerror("unclosed string");}
+{Error_character}                     {lexicerror(concat("illegal character ", yytext));}
 %%
 
 /*
@@ -105,38 +109,37 @@ int main(int argc, char *argv[])
 
 void yyerror(const char *str)
 {
-    i++;
 
     /*if(str[0]=='s'){
-        char errstr[1000];
-        char linestr[20];
-        strncpy(errstr, str, 12);
-        errstr[12] = '\0';
-        sprintf(linestr," on line %d",yylineno);
-        strcat(errstr, linestr);
-        strcat(errstr, str + 12);
-        errstr[0]='S';
-        strcpy(str,errstr);
+        return;
     }*/
     fprintf(stderr,"#  %s\n",str);
 }
 
-void lexicerror (int type, const char *msg){
+void lexicerror ( const char *msg ){
+    i++;
     char errstr[1000];
-    switch (type){
-    case 1:
-        sprintf(errstr,"Lexical error on line %d, %s '%s'",yylineno,msg,yytext);
-        break;
-    case 2:
         sprintf(errstr,"Lexical error on line %d, %s",yylineno,msg);
-        break;
-    }
     yyerror(errstr);
 }
 
 void syntaxerror (const char *str){
+    i++;
     char errstr[1000];
     sprintf(errstr,"Syntax error on line %d, %s",yylineno,str);
+    yyerror(errstr);
+}
+
+void semanticerror (const char *str){
+    i++;
+    char errstr[1000];
+    sprintf(errstr,"Semantic error on line %d, %s",yylineno,str);
+    yyerror(errstr);
+}
+
+void semanticwarning (const char *str){
+    char errstr[1000];
+    sprintf(errstr,"Semantic warning on line %d, %s",yylineno,str);
     yyerror(errstr);
 }
 

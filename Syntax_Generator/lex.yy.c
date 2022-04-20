@@ -501,12 +501,16 @@ char *yytext;
  #include <math.h>
  #include "miniJava.tab.h"
 
-	int i=0;
+int i=0;
+extern char nom[];
 
  void yyerror(char const *msg);
- void lexicerror (int type, const char *msg);
+ void lexicerror ( const char *msg);
  void syntaxerror (const char *str);
-#line 510 "lex.yy.c"
+ void semanticerror (const char *str);
+ void semanticwarning (const char *str);
+ char* concat(char* s1, char* s2);
+#line 514 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -657,10 +661,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 42 "miniJava.l"
+#line 46 "miniJava.l"
 
 
-#line 664 "lex.yy.c"
+#line 668 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -753,225 +757,225 @@ do_action:	/* This label is used only to access EOF actions. */
 	{ /* beginning of action switch */
 case 1:
 YY_RULE_SETUP
-#line 44 "miniJava.l"
+#line 48 "miniJava.l"
 return KEYWORD_CLASS;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 45 "miniJava.l"
+#line 49 "miniJava.l"
 return KEYWORD_PUBLIC;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 46 "miniJava.l"
+#line 50 "miniJava.l"
 return KEYWORD_MAIN;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 47 "miniJava.l"
+#line 51 "miniJava.l"
 return KEYWORD_EXTENDS;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 48 "miniJava.l"
+#line 52 "miniJava.l"
 return KEYWORD_RETURN;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 49 "miniJava.l"
+#line 53 "miniJava.l"
 return KEYWORD_IF;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 50 "miniJava.l"
+#line 54 "miniJava.l"
 return KEYWORD_ELSE;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 51 "miniJava.l"
+#line 55 "miniJava.l"
 return KEYWORD_WHILE;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 52 "miniJava.l"
+#line 56 "miniJava.l"
 return KEYWORD_PRINT;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 53 "miniJava.l"
+#line 57 "miniJava.l"
 return KEYWORD_LENGTH;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 54 "miniJava.l"
+#line 58 "miniJava.l"
 return KEYWORD_THIS;
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 55 "miniJava.l"
+#line 59 "miniJava.l"
 return KEYWORD_NEW;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 57 "miniJava.l"
+#line 61 "miniJava.l"
 return TYPE_INT;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 58 "miniJava.l"
+#line 62 "miniJava.l"
 return TYPE_BOOLEAN;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 59 "miniJava.l"
+#line 63 "miniJava.l"
 return TYPE_STRING;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 61 "miniJava.l"
+#line 65 "miniJava.l"
 return BOOLEAN_LITERAL;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 62 "miniJava.l"
-return INTEGER_LITERAL;
+#line 66 "miniJava.l"
+{yylval = atoi(yytext);return INTEGER_LITERAL;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 63 "miniJava.l"
+#line 67 "miniJava.l"
 return STRING_LITERAL;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 64 "miniJava.l"
-return IDENTIFIER;
+#line 68 "miniJava.l"
+{strcpy(nom, yytext);return IDENTIFIER;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 66 "miniJava.l"
+#line 70 "miniJava.l"
 return PARENTHESE_OPEN;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 67 "miniJava.l"
+#line 71 "miniJava.l"
 return PARENTHESE_CLOSE;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 68 "miniJava.l"
+#line 72 "miniJava.l"
 return BRACKET_OPEN;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 69 "miniJava.l"
+#line 73 "miniJava.l"
 return BRACKET_CLOSE;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 70 "miniJava.l"
+#line 74 "miniJava.l"
 return BRACE_OPEN;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 71 "miniJava.l"
+#line 75 "miniJava.l"
 return BRACE_CLOSE;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 73 "miniJava.l"
+#line 77 "miniJava.l"
 return OP_AFFECT;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 74 "miniJava.l"
+#line 78 "miniJava.l"
 return OP_AND;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 75 "miniJava.l"
+#line 79 "miniJava.l"
 return OP_LESS;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 76 "miniJava.l"
+#line 80 "miniJava.l"
 return OP_ADD;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 77 "miniJava.l"
+#line 81 "miniJava.l"
 return OP_SUBSTRACT;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 78 "miniJava.l"
+#line 82 "miniJava.l"
 return OP_MULTIPLY;
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 79 "miniJava.l"
+#line 83 "miniJava.l"
 return OP_NOT;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 81 "miniJava.l"
+#line 85 "miniJava.l"
 return SEMI_COLON;
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 82 "miniJava.l"
+#line 86 "miniJava.l"
 return DOT;
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 83 "miniJava.l"
+#line 87 "miniJava.l"
 return COMMA;
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 85 "miniJava.l"
+#line 89 "miniJava.l"
 /* no actions */
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 86 "miniJava.l"
+#line 90 "miniJava.l"
 /* no actions */
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 88 "miniJava.l"
+#line 92 "miniJava.l"
 /* no actions */
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 89 "miniJava.l"
+#line 93 "miniJava.l"
 /* no actions */
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 91 "miniJava.l"
-{lexicerror(1,"illegal identifier");}
+#line 95 "miniJava.l"
+{lexicerror(concat("illegal identifier ", yytext));}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 92 "miniJava.l"
-{lexicerror(2,"unclosed comment");}
+#line 96 "miniJava.l"
+{lexicerror("unclosed comment");}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 93 "miniJava.l"
-{lexicerror(2,"unclosed string");}
+#line 97 "miniJava.l"
+{lexicerror("unclosed string");}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 94 "miniJava.l"
-{lexicerror(1,"illegal character");}
+#line 98 "miniJava.l"
+{lexicerror(concat("illegal character ", yytext));}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 95 "miniJava.l"
+#line 99 "miniJava.l"
 ECHO;
 	YY_BREAK
-#line 975 "lex.yy.c"
+#line 979 "lex.yy.c"
 			case YY_STATE_EOF(INITIAL):
 				yyterminate();
 
@@ -1855,7 +1859,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 95 "miniJava.l"
+#line 99 "miniJava.l"
 
 
 /*
@@ -1869,38 +1873,37 @@ int main(int argc, char *argv[])
 
 void yyerror(const char *str)
 {
-    i++;
 
-    /*if(str[0]=='s'){
-        char errstr[1000];
-        char linestr[20];
-        strncpy(errstr, str, 12);
-        errstr[12] = '\0';
-        sprintf(linestr," on line %d",yylineno);
-        strcat(errstr, linestr);
-        strcat(errstr, str + 12);
-        errstr[0]='S';
-        strcpy(str,errstr);
-    }*/
+    if(str[0]=='s'){
+        return;
+    }
     fprintf(stderr,"#  %s\n",str);
 }
 
-void lexicerror (int type, const char *msg){
+void lexicerror ( const char *msg ){
+    i++;
     char errstr[1000];
-    switch (type){
-    case 1:
-        sprintf(errstr,"Lexical error on line %d, %s '%s'",yylineno,msg,yytext);
-        break;
-    case 2:
         sprintf(errstr,"Lexical error on line %d, %s",yylineno,msg);
-        break;
-    }
     yyerror(errstr);
 }
 
 void syntaxerror (const char *str){
+    i++;
     char errstr[1000];
     sprintf(errstr,"Syntax error on line %d, %s",yylineno,str);
+    yyerror(errstr);
+}
+
+void semanticerror (const char *str){
+    i++;
+    char errstr[1000];
+    sprintf(errstr,"Semantic error on line %d, %s",yylineno,str);
+    yyerror(errstr);
+}
+
+void semanticwarning (const char *str){
+    char errstr[1000];
+    sprintf(errstr,"Semantic warning on line %d, %s",yylineno,str);
     yyerror(errstr);
 }
 
