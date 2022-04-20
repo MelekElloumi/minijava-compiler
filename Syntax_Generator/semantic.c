@@ -15,7 +15,7 @@ int g_nbParam;
 
 NOEUD creer (const char* nom, TYPE_IDENTIFIER type, CLASS classs, NOEUD suivant){
     NOEUD noeud = (NOEUD)malloc(sizeof(struct NOEUD));
-    noeud->nom = (char *)malloc(strlen(nom)+1);
+    noeud->nom = (char *)malloc(strlen(nom)+2);
     strcpy(noeud->nom, nom);
     noeud->type = type;
     noeud->isUsed = 0;
@@ -43,9 +43,13 @@ NOEUD chercher (const char* nom, TABLE_NOUED table) {
     if( !table )
         return NULL;
     NOEUD noeud = table;
-    while( noeud && ( strcmp(nom, noeud->nom) != 0 ) )
+    while( noeud ){
+        if (strcmp(nom, noeud->nom) == 0){
+            return noeud;
+        }
         noeud = noeud->suivant;
-    return noeud;
+    }
+    return NULL;
 }
 
 void destructSymbolsTable( TABLE_NOUED table )
@@ -179,6 +183,8 @@ void verifierClassID (char* nom){
 }
 
 void foncDecEnd(){
+    if(!g_noeudFonc)
+        return;
     g_noeudFonc->nbParam = g_nbParam;
     g_nbParam = 0;
     g_IfFoncParameters = 0;
@@ -199,7 +205,8 @@ int verifierIDDeclare (char* nom){
         if ( !noeud ){
             noeud = chercher(nom, table);
             if( !noeud ){
-                semanticerror(concat("variable not declared:  ", nom));
+                semanticerror(concat("variable undeclared: ", nom));
+                End();
                 return 0;
             }else
             {
@@ -212,7 +219,8 @@ int verifierIDDeclare (char* nom){
     }else{
         noeud = chercher(nom, table);
         if( !noeud ){
-            semanticerror(concat("variable not declared:   ", nom));
+            semanticerror(concat("variable undeclared: ", nom));
+            End();
             return 0;
         }else
         {
@@ -230,14 +238,16 @@ int verifierIDDeclareOnInit (char* nom){
         if ( !noeud ){
             noeud = chercher(nom, table);
             if( !noeud ){
-                semanticerror(concat("variable not declared:    ", nom));
+                semanticerror(concat("variable undeclared: ", nom));
+                End();
                 return 0;
             }
         }
     }else{
         noeud = chercher(nom, table);
         if( !noeud ){
-            semanticerror(concat("variable not declared:       ", nom));
+            semanticerror(concat("variable undeclared: ", nom));
+            End();
             return 0;
         }
     }
@@ -263,8 +273,8 @@ void verifierVarInitialise (char* nom){
 
     if (g_IfFonc){
         noeud = chercher(nom, table_local);
-        if ( !noeud )
-            noeud = chercher(nom, table);
+        if ( !noeud ){
+            noeud = chercher(nom, table);}
     }else{
         noeud = chercher(nom, table);
     }
@@ -276,16 +286,20 @@ void verifierVarInitialise (char* nom){
 
 void finFonction()
 {
+    //printf("-------\n");
+    //DisplaySymbolsTable(table_local);
     NOEUD tmp_table;
     if (g_IfFonc == 1){
         g_IfFonc = 0;
         tmp_table = table_local;
         table_local = NULL;
     }
-    while( tmp_table ){
+    while( tmp_table!=NULL ){
         if (tmp_table->classs == variable && !tmp_table->isUsed)
         {
-            semanticwarning(concat("declared variable is not used: ",tmp_table->nom));
+            //semanticwarning(concat("declared variable is not used: ",tmp_table->nom));
+            //printf("%s",tmp_table->nom);
+            semanticwarning(tmp_table->nom);
         }
         tmp_table = tmp_table->suivant;
     }
@@ -328,9 +342,9 @@ void checkIDOnInit(char* nom){
 }
 
 
-char* concat(char* s1, char* s2){
+char* concat(const char* s1, char* s2){
     char* message;
-    message = malloc(strlen(s1)+ strlen(s2));
+    message = malloc(strlen(s1)+ strlen(s2)+2);
     strcpy(message, s1);
     strcat(message, s2);
     return message;

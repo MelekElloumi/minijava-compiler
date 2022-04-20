@@ -56,8 +56,9 @@ void foncCallEnd();
 void checkID(char* nom);
 int verifierIDDeclareOnInit (char* nom);
 void checkIDOnInit(char* nom);
-char* concat(char* s1, char* s2);
-void semanticwarning (const char *str);
+char* concat(const char* s1, char* s2);
+void semanticwarning (char *str);
 void semanticerror (const char *str);
+void End();
 
 #endif // SEMANTIC_H_INCLUDED

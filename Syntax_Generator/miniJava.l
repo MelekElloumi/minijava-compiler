@@ -6,13 +6,14 @@
  #include "miniJava.tab.h"
 
 int i=0;
+int j=0;
 extern char nom[];
 
  void yyerror(char const *msg);
  void lexicerror ( const char *msg);
  void syntaxerror (const char *str);
  void semanticerror (const char *str);
- void semanticwarning (const char *str);
+ void semanticwarning ( char *str);
  char* concat(char* s1, char* s2);
 %}
 
@@ -110,36 +111,37 @@ int main(int argc, char *argv[])
 void yyerror(const char *str)
 {
 
-    /*if(str[0]=='s'){
+    if(str[0]=='s'){
         return;
-    }*/
+    }
     fprintf(stderr,"#  %s\n",str);
 }
 
 void lexicerror ( const char *msg ){
     i++;
-    char errstr[1000];
+    char errstr[200];
         sprintf(errstr,"Lexical error on line %d, %s",yylineno,msg);
     yyerror(errstr);
 }
 
 void syntaxerror (const char *str){
     i++;
-    char errstr[1000];
+    char errstr[200];
     sprintf(errstr,"Syntax error on line %d, %s",yylineno,str);
     yyerror(errstr);
 }
 
 void semanticerror (const char *str){
     i++;
-    char errstr[1000];
+    char errstr[200];
     sprintf(errstr,"Semantic error on line %d, %s",yylineno,str);
     yyerror(errstr);
 }
 
-void semanticwarning (const char *str){
-    char errstr[1000];
-    sprintf(errstr,"Semantic warning on line %d, %s",yylineno,str);
+void semanticwarning (char *nom){
+    j++;
+    char errstr[200];
+    sprintf(errstr,"Semantic warning on line %d, declared variable is not used: %s",yylineno,nom);
     yyerror(errstr);
 }
 

@@ -250,16 +250,21 @@ namespace MiniJava_Compiler
             MatchCollection completeMatches = Regex.Matches(richTextBox1.Text, complete);
 
             // getting types/classes from the text 
-            string error = "[0-9]+ errors found";
+            string error = "error|[0-9]+ errors?[ ]+found";
             MatchCollection errorMatches = Regex.Matches(richTextBox1.Text, error);
 
             // getting types/classes from the text 
-            string synlex = @"\b(Lexical|Syntax|syntax)\b";
+            string synlex = @"\b(Lexical|Syntax|syntax|Semantic)\b";
             MatchCollection synlexMatches = Regex.Matches(richTextBox1.Text, synlex);
 
+            string warning = @"\b(warning|[0-9]+ warnings?[ ]+found)\b";
+            MatchCollection warningMatches = Regex.Matches(richTextBox1.Text, warning);
             // getting types/classes from the text 
             string integers = "[0-9]+";
             MatchCollection integersMatches = Regex.Matches(richTextBox1.Text, integers);
+
+            string variable = ":.*";
+            MatchCollection variableMatches = Regex.Matches(richTextBox1.Text, variable);
 
             // saving the original caret position + forecolor
             int originalIndex = richTextBox1.SelectionStart;
@@ -302,6 +307,20 @@ namespace MiniJava_Compiler
                 richTextBox1.SelectionStart = m.Index;
                 richTextBox1.SelectionLength = m.Length;
                 richTextBox1.SelectionColor = Color.Violet;
+            }
+
+            foreach (Match m in warningMatches)
+            {
+                richTextBox1.SelectionStart = m.Index;
+                richTextBox1.SelectionLength = m.Length;
+                richTextBox1.SelectionColor = Color.Yellow;
+            }
+
+            foreach (Match m in variableMatches)
+            {
+                richTextBox1.SelectionStart = m.Index+1;
+                richTextBox1.SelectionLength = m.Length-1;
+                richTextBox1.SelectionColor = Color.DodgerBlue;
             }
 
             // restoring the original colors, for further writing

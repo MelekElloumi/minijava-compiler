@@ -9,6 +9,7 @@
 	int yylex(void);
 	extern int yylineno;
 	extern int i;
+    extern int j;
 	void yyerror(const char *str);
 	void syntaxerror (const char *str);
 	void Begin();
@@ -202,7 +203,7 @@ Operator               : OP_ADD
                        ;
 Identifier             : IDENTIFIER
                        ;
-Identifierexp          : IDENTIFIER{checkID(nom);}
+Identifierexp          : IDENTIFIER {checkID(nom);}
                        ;
 Identifieraff          : IDENTIFIER {checkIDOnInit(nom);}
                        ;
@@ -219,16 +220,11 @@ int main(int argc, char **argv)
     yyin = fopen(argv[1], "r");
     Begin();
     yyparse();
-
-    fclose(yyin);
-    	printf("------------------------------\n");
-	if(i==0)
-        printf("Compilation complete with no errors\n------------------------------\n");
-    else
-        printf("%d errors found\n------------------------------\n",i);
     End();
-    return 0;
+    return 1;
 }
+
+
 
 void Begin()
 {
@@ -247,9 +243,27 @@ void Begin()
 
 void End()
 {
+    fclose(yyin);
+    	printf("------------------------------\n");
+    char c;
+    c=' ';
+    if(i>1)
+        c='s';
+	if(i==0)
+        printf("Compilation complete with no errors\n------------------------------\n");
+    else
+        printf("%d error%c found\n",i,c);
+    c=' ';
+    if(j>1)
+        c='s';
+    if(j!=0)
+        printf("%d warning%c found\n",j,c);
+    printf("------------------------------\n");
+
     destructSymbolsTable(table_local);
 	destructSymbolsTable(table);
 	destructSymbolsTable(table_class);
+	exit(0);
 }
 
 
