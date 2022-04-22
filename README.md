@@ -13,7 +13,7 @@
 ## MiniJava Syntax
 - The Syntax_Generator folder contains the lex (.l), yacc (.y) and semantic files that generates miniJava.exe.
 - miniJava.exe checks the content of a file (given as argument) and analyse it lexically with lex to generate tokens then uses them check its syntax, and saves the variables in a symbols table to verify if they were implemented correctly (declaration, initialisation and usage).
-![Imgur](https://i.imgur.com/6YzhukE.png)
+![Imgur](https://i.imgur.com/Yp23woU.png)
 
 #### MiniJava BNF
 - This compiler doesn't contain every Java rule.
