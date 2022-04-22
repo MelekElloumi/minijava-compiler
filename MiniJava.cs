@@ -288,13 +288,6 @@ namespace MiniJava_Compiler
                 richTextBox1.SelectionColor = Color.DodgerBlue;
             }
 
-            foreach (Match m in completeMatches)
-            {
-                richTextBox1.SelectionStart = m.Index;
-                richTextBox1.SelectionLength = m.Length;
-                richTextBox1.SelectionColor = Color.Lime;
-            }
-
             foreach (Match m in errorMatches)
             {
                 richTextBox1.SelectionStart = m.Index;
@@ -314,6 +307,13 @@ namespace MiniJava_Compiler
                 richTextBox1.SelectionStart = m.Index;
                 richTextBox1.SelectionLength = m.Length;
                 richTextBox1.SelectionColor = Color.Yellow;
+            }
+
+            foreach (Match m in completeMatches)
+            {
+                richTextBox1.SelectionStart = m.Index;
+                richTextBox1.SelectionLength = m.Length;
+                richTextBox1.SelectionColor = Color.Lime;
             }
 
             foreach (Match m in variableMatches)

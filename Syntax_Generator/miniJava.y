@@ -250,15 +250,19 @@ void End()
     if(i>1)
         c='s';
 	if(i==0)
-        printf("Compilation complete with no errors\n------------------------------\n");
+        printf("Compilation complete with no errors\n");
     else
         printf("%d error%c found\n",i,c);
     c=' ';
     if(j>1)
         c='s';
-    if(j!=0)
+    if(j!=0){
+		if(i==0)
+			printf("------------------------------\n");
         printf("%d warning%c found\n",j,c);
-    printf("------------------------------\n");
+	}
+	printf("------------------------------\n");
+	
 
     destructSymbolsTable(table_local);
 	destructSymbolsTable(table);
