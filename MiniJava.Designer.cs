@@ -55,6 +55,7 @@ namespace MiniJava_Compiler
             this.CompileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.ExecuteMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this.Console.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -156,9 +157,9 @@ namespace MiniJava_Compiler
             this.richTextBox2.VScroll += new System.EventHandler(this.richTextBox2_VScroll);
             this.richTextBox2.FontChanged += new System.EventHandler(this.richTextBox2_FontChanged);
             this.richTextBox2.TextChanged += new System.EventHandler(this.richTextBox2_TextChanged);
-            this.richTextBox2.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.richTextBox2_MouseWheel);
             this.richTextBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.richTextBox2_KeyDown);
             this.richTextBox2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.richTextBox2_KeyUp);
+            this.richTextBox2.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.richTextBox2_MouseWheel);
             // 
             // LineNumberTextBox
             // 
@@ -184,7 +185,8 @@ namespace MiniJava_Compiler
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
-            this.CompileMenuItem});
+            this.CompileMenuItem,
+            this.ExecuteMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(946, 24);
@@ -360,6 +362,15 @@ namespace MiniJava_Compiler
             this.openFileDialog1.Filter = "java files (*.java)|*.java";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
+            // ExecuteMenuItem1
+            // 
+            this.ExecuteMenuItem1.Enabled = false;
+            this.ExecuteMenuItem1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.ExecuteMenuItem1.Name = "ExecuteMenuItem1";
+            this.ExecuteMenuItem1.Size = new System.Drawing.Size(60, 20);
+            this.ExecuteMenuItem1.Text = "&Execute";
+            this.ExecuteMenuItem1.Click += new System.EventHandler(this.ExecuteMenuItem_Click);
+            // 
             // MiniJava
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -415,6 +426,7 @@ namespace MiniJava_Compiler
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.RichTextBox LineNumberTextBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.ToolStripMenuItem ExecuteMenuItem1;
     }
 }
 

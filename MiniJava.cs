@@ -238,7 +238,7 @@ namespace MiniJava_Compiler
                 this.saved = false;
                 this.Text = this.Text + "*";
             }
-
+            this.ExecuteMenuItem1.Enabled = false;
             // giving back the focus
             richTextBox2.Focus();
         }
@@ -349,9 +349,10 @@ namespace MiniJava_Compiler
             openFileDialog1.FileName = "New_file.java";
             this.saved = false;
             this.Text ="New_file.java";
+            this.ExecuteMenuItem1.Enabled = false;
             richTextBox2.ResetText();
             richTextBox1.ResetText();
-            richTextBox2.Focus();
+            richTextBox2.Focus();          
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -380,6 +381,7 @@ namespace MiniJava_Compiler
                 richTextBox2.Select(richTextBox2.Text.Length - 1, 0);
                 this.saved = true;
                 this.Text = Path.GetFileName(openFileDialog1.FileName);
+                this.ExecuteMenuItem1.Enabled = false;
                 // richTextBox1.LoadFile(openFileDialog1.FileName, RichTextBoxStreamType.RichText);  // loads the file in RTB format
             }
 
@@ -541,6 +543,13 @@ namespace MiniJava_Compiler
                 richTextBox1.Text = eOut;
                 richTextBox1.AppendText(output);
             }
+            this.ExecuteMenuItem1.Enabled = true;
+        }
+        private void ExecuteMenuItem_Click(object sender, EventArgs e)
+        {
+            string filePath = Path.Combine(Environment.CurrentDirectory, "generatedCode.txt");
+            string codegen = File.ReadAllText(filePath);
+            richTextBox1.Text = codegen;
         }
     }
 }

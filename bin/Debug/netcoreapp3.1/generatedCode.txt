@@ -1,4 +1,4 @@
-LDC 5 
+LDC 8 
 STORE 1 
 LDC 7 
 STORE 2 
