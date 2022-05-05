@@ -5,10 +5,8 @@ class Factorial{
 		int y;
 		x=1;
 		y=3;
-		if (y>=x){
-			x=y;
-		}else{
-			y=x;
+		while (x>=y){
+			x=x+1;
 		}
 		x=x*345;
     }

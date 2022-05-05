@@ -10,6 +10,8 @@
     char nomaff[256];
     char oper[10];
     int indexIf;
+    int indexWhile1;
+    int indexWhile2;
 
 	int yylex(void);
 	extern int yylineno;
@@ -21,7 +23,6 @@
 	void BeginCodeGen();
     void EndSemantique();
     void EndCodeGen();
-    void test();
 %}
 
 %token IDENTIFIER
@@ -154,9 +155,8 @@ Statement              : BRACE_OPEN StatementS BRACE_CLOSE
                        /*| KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
                        | KEYWORD_IF PARENTHESE_OPEN Expression error StatementS {syntaxerror ("closing parentheses missing"); }
                        | KEYWORD_IF error StatementS {syntaxerror ("if condition missing"); }*/
-                       | KEYWORD_WHILE PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
-                       | KEYWORD_WHILE PARENTHESE_OPEN Expression error StatementS {syntaxerror ("closing parentheses missing"); }
-                       | KEYWORD_WHILE error Statement {syntaxerror ("while condition missing"); }
+                       | KEYWORD_WHILE {indexWhile1=indextab;} PARENTHESE_OPEN Expression PARENTHESE_CLOSE {tabCodeInt[indextab]=creerCode("TANTQUEFAUX");indexWhile2=indextab;indextab++;}
+                            BRACE_OPEN StatementS BRACE_CLOSE {tabCodeInt[indextab]=creerOp("TANTQUE",indexWhile1);indextab++;tabCodeInt[indexWhile2].operande=indextab;}
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression PARENTHESE_CLOSE SEMI_COLON
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression PARENTHESE_CLOSE error {syntaxerror ("semicolon missing"); }
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression error SEMI_COLON {syntaxerror ("closing parentheses missing"); }
@@ -243,7 +243,6 @@ int main(int argc, char **argv)
     yyin = fopen(argv[1], "r");
     BeginCodeGen();
     BeginSemantique();
-    //test();
     yyparse();
     EndSemantique();
     EndCodeGen();
@@ -267,18 +266,6 @@ void BeginSemantique()
 
 void BeginCodeGen(){
     indextab = 0;
-}
-void test(){
-    tabCodeInt[indextab]=creerOp("LDC",4);
-    indextab++;
-    tabCodeInt[indextab]=creerOp("STORE",0);
-    indextab++;
-    tabCodeInt[indextab]=creerOp("LDC",5);
-    indextab++;
-    tabCodeInt[indextab]=creerOp("STORE",1);
-    indextab++;
-    tabCodeInt[indextab]=creerCode("SORTIE");
-    indextab++;
 }
 
 void EndCodeGen(){
