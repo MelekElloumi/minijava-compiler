@@ -9,6 +9,7 @@
     int numval;
     char nomaff[256];
     char oper[10];
+    int indexIf;
 
 	int yylex(void);
 	extern int yylineno;
@@ -53,12 +54,18 @@
 %token BRACE_CLOSE
 
 %token OP_AFFECT
-%token OP_AND
-%token OP_LESS
 %token OP_ADD
 %token OP_SUBSTRACT
 %token OP_MULTIPLY
 %token OP_NOT
+
+%token LOG_AND
+%token LOG_LESS
+%token LOG_EQLESS
+%token LOG_MORE
+%token LOG_EQMORE
+%token LOG_EQ
+%token LOG_DIF
 
 %token SEMI_COLON
 %token DOT
@@ -138,13 +145,15 @@ Statement              : BRACE_OPEN StatementS BRACE_CLOSE
                        | BRACE_OPEN StatementS error {syntaxerror ("closing brace missing"); }
                        | error StatementS BRACE_CLOSE {syntaxerror ("opening brace missing"); }
                        | VarDeclaration
-                       | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS KEYWORD_ELSE StatementS
+                       | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE {tabCodeInt[indextab]=creerCode("SIFAUX");indexIf=indextab;indextab++;}
+                            BRACE_OPEN StatementS BRACE_CLOSE {tabCodeInt[indextab]=creerCode("SAUT");indextab++;tabCodeInt[indexIf].operande=indextab;indexIf=indextab-1;}
+                            KEYWORD_ELSE BRACE_OPEN StatementS BRACE_CLOSE {tabCodeInt[indexIf].operande=indextab;}
                        | KEYWORD_IF error Expression PARENTHESE_CLOSE StatementS KEYWORD_ELSE StatementS {syntaxerror ("opening parentheses missing"); }
                        | KEYWORD_IF PARENTHESE_OPEN Expression error Statement KEYWORD_ELSE StatementS {syntaxerror ("closing parentheses missing"); }
                        | KEYWORD_IF error StatementS KEYWORD_ELSE StatementS {syntaxerror ("if condition missing"); }
-                       | KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
+                       /*| KEYWORD_IF PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
                        | KEYWORD_IF PARENTHESE_OPEN Expression error StatementS {syntaxerror ("closing parentheses missing"); }
-                       | KEYWORD_IF error StatementS {syntaxerror ("if condition missing"); }
+                       | KEYWORD_IF error StatementS {syntaxerror ("if condition missing"); }*/
                        | KEYWORD_WHILE PARENTHESE_OPEN Expression PARENTHESE_CLOSE StatementS
                        | KEYWORD_WHILE PARENTHESE_OPEN Expression error StatementS {syntaxerror ("closing parentheses missing"); }
                        | KEYWORD_WHILE error Statement {syntaxerror ("while condition missing"); }
@@ -184,6 +193,7 @@ Expression             : INTEGER_LITERAL {tabCodeInt[indextab]=creerOp("LDC",num
                        | PARENTHESE_OPEN Expression error ExpressionComp {syntaxerror ("closing parentheses missing"); }
                        ;
 ExpressionComp         : Operator Expression {tabCodeInt[indextab]=creerCode(oper);indextab++;} ExpressionComp
+                       | Logic Expression {tabCodeInt[indextab]=creerCode(oper);indextab++;} ExpressionComp
                        | BRACKET_OPEN Expression BRACKET_CLOSE ExpressionComp
                        | BRACKET_OPEN Expression error ExpressionComp  {syntaxerror ("closing bracket missing"); }
                        | DOT KEYWORD_LENGTH ExpressionComp
@@ -203,10 +213,16 @@ ExpressionS            : Expression {g_nbParam ++;} COMMA ExpressionS
                        | Expression error ExpressionS {syntaxerror ("comma missing"); }
                        ;
 Operator               : OP_ADD {strcpy(oper, "ADD");}
-                       | OP_AND
-                       | OP_LESS
                        | OP_MULTIPLY {strcpy(oper, "MUL");}
                        | OP_SUBSTRACT {strcpy(oper, "SUB");}
+                       ;
+Logic                  : LOG_AND
+                       | LOG_LESS {strcpy(oper, "INF");}
+                       | LOG_EQLESS {strcpy(oper, "INFE");}
+                       | LOG_MORE {strcpy(oper, "SUP");}
+                       | LOG_EQMORE {strcpy(oper, "SUPE");}
+                       | LOG_EQ {strcpy(oper, "EGAL");}
+                       | LOG_DIF {strcpy(oper, "DIF");}
                        ;
 Identifier             : IDENTIFIER
                        ;

@@ -77,12 +77,18 @@ Error_comment                   \/\*([^(\*\/)]|\n)*
 {Brace_close}                         return BRACE_CLOSE;
 
 "="	                                  return OP_AFFECT;
-"&&"                                  return OP_AND;
-"<"                                   return OP_LESS;
 "+"                                   return OP_ADD;
 "-"                                   return OP_SUBSTRACT;
 "*"                                   return OP_MULTIPLY;
 "!"                                   return OP_NOT;
+
+"&&"                                  return LOG_AND;
+"<"                                   return LOG_LESS;
+"<="                                  return LOG_EQLESS;
+">"                                   return LOG_MORE;
+">="                                  return LOG_EQMORE;
+"=="                                  return LOG_EQ;
+"!="                                  return LOG_DIF;
 
 ";"                                   return SEMI_COLON;
 "."                                   return DOT;
