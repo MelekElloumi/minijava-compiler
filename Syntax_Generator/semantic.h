@@ -38,6 +38,7 @@ typedef NOEUD TABLE_NOUED;
 NOEUD creer (const char* nom, TYPE_IDENTIFIER type, CLASS classe, NOEUD suivant);
 NOEUD insert (NOEUD noeud, TABLE_NOUED table);
 NOEUD chercher (const char* nom, TABLE_NOUED table);
+int getAddress (const char* nom, TABLE_NOUED table);
 
 void verifierID(char* nom);
 void verifierVarID (char* nom);

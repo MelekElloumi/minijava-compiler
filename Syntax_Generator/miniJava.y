@@ -6,6 +6,9 @@
     #include <string.h>
 
     char nom[256];
+    int numval;
+    char nomaff[256];
+    char oper[10];
 
 	int yylex(void);
 	extern int yylineno;
@@ -148,7 +151,7 @@ Statement              : BRACE_OPEN StatementS BRACE_CLOSE
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression PARENTHESE_CLOSE SEMI_COLON
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression PARENTHESE_CLOSE error {syntaxerror ("semicolon missing"); }
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression error SEMI_COLON {syntaxerror ("closing parentheses missing"); }
-                       | Identifieraff OP_AFFECT Expression SEMI_COLON {tabCodeInt[indextab]=creerOp("LDC",4);indextab++;}
+                       | Identifieraff OP_AFFECT Expression SEMI_COLON {tabCodeInt[indextab]=creerOp("STORE",getAddress(nomaff,table_local));indextab++;}
                        | Identifieraff OP_AFFECT Expression error {syntaxerror ("semicolon missing"); }
                        | Identifieraff OP_AFFECT error SEMI_COLON {syntaxerror ("second expression missing"); }
                        | Identifieraff error Expression SEMI_COLON{syntaxerror ("'=' expected"); }
@@ -158,7 +161,7 @@ Statement              : BRACE_OPEN StatementS BRACE_CLOSE
                        | Identifieraff BRACKET_OPEN Expression BRACKET_CLOSE error Expression SEMI_COLON {syntaxerror ("'=' expected"); }
                        | Identifieraff BRACKET_OPEN Expression BRACKET_CLOSE OP_AFFECT Expression error {syntaxerror ("semicolon missing"); }
                        ;
-Expression             : INTEGER_LITERAL {tabCodeInt[indextab]=creerOp("LDC",4);indextab++;}ExpressionComp
+Expression             : INTEGER_LITERAL {tabCodeInt[indextab]=creerOp("LDC",numval);indextab++;}ExpressionComp
                        | BOOLEAN_LITERAL ExpressionComp
                        | STRING_LITERAL ExpressionComp
                        | Identifierexp ExpressionComp
@@ -180,7 +183,7 @@ Expression             : INTEGER_LITERAL {tabCodeInt[indextab]=creerOp("LDC",4);
                        | error Expression PARENTHESE_CLOSE ExpressionComp {syntaxerror ("opening parentheses missing"); }
                        | PARENTHESE_OPEN Expression error ExpressionComp {syntaxerror ("closing parentheses missing"); }
                        ;
-ExpressionComp         : Operator Expression ExpressionComp
+ExpressionComp         : Operator Expression {tabCodeInt[indextab]=creerCode(oper);indextab++;} ExpressionComp
                        | BRACKET_OPEN Expression BRACKET_CLOSE ExpressionComp
                        | BRACKET_OPEN Expression error ExpressionComp  {syntaxerror ("closing bracket missing"); }
                        | DOT KEYWORD_LENGTH ExpressionComp
@@ -199,17 +202,17 @@ ExpressionS            : Expression {g_nbParam ++;} COMMA ExpressionS
                        | Expression {g_nbParam ++;}
                        | Expression error ExpressionS {syntaxerror ("comma missing"); }
                        ;
-Operator               : OP_ADD
+Operator               : OP_ADD {strcpy(oper, "ADD");}
                        | OP_AND
                        | OP_LESS
-                       | OP_MULTIPLY
-                       | OP_SUBSTRACT
+                       | OP_MULTIPLY {strcpy(oper, "MUL");}
+                       | OP_SUBSTRACT {strcpy(oper, "SUB");}
                        ;
 Identifier             : IDENTIFIER
                        ;
-Identifierexp          : IDENTIFIER {checkID(nom);}
+Identifierexp          : IDENTIFIER {checkID(nom);tabCodeInt[indextab]=creerOp("LDV",getAddress(nom,table_local));indextab++;}
                        ;
-Identifieraff          : IDENTIFIER {checkIDOnInit(nom);}
+Identifieraff          : IDENTIFIER {checkIDOnInit(nom); strcpy(nomaff, nom);}
                        ;
 
 
@@ -224,7 +227,7 @@ int main(int argc, char **argv)
     yyin = fopen(argv[1], "r");
     BeginCodeGen();
     BeginSemantique();
-    test();
+    //test();
     yyparse();
     EndSemantique();
     EndCodeGen();

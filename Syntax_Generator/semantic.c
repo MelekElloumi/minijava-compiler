@@ -52,6 +52,21 @@ NOEUD chercher (const char* nom, TABLE_NOUED table) {
     return NULL;
 }
 
+int getAddress (const char* nom, TABLE_NOUED table) {
+    if( !table )
+        return -1;
+    NOEUD noeud = table;
+    int pos=0;
+    while( noeud ){
+        if (strcmp(nom, noeud->nom) == 0){
+            return pos;
+        }
+        pos++;
+        noeud = noeud->suivant;
+    }
+    return -1;
+}
+
 void destructSymbolsTable( TABLE_NOUED table )
 {
     if( !table )
