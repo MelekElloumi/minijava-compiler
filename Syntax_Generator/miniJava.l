@@ -8,6 +8,7 @@
 int i=0;
 int j=0;
 extern char nom[];
+extern int numval;
 
  void yyerror(char const *msg);
  void lexicerror ( const char *msg);
@@ -64,7 +65,7 @@ Error_comment                   \/\*([^(\*\/)]|\n)*
 "String"                              return TYPE_STRING;
 
 {Boolean}							  return BOOLEAN_LITERAL;
-{Integer}                             {yylval = atoi(yytext);return INTEGER_LITERAL;}
+{Integer}                             {numval = atoi(yytext);return INTEGER_LITERAL;}
 {String}							  return STRING_LITERAL;
 {Identifier}                          {strcpy(nom, yytext);return IDENTIFIER;}
 

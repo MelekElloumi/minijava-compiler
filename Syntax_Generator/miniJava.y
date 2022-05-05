@@ -1,5 +1,6 @@
 %{
     #include "semantic.c"
+    #include "codeGen.c"
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
@@ -12,8 +13,11 @@
     extern int j;
 	void yyerror(const char *str);
 	void syntaxerror (const char *str);
-	void Begin();
-    void End();
+	void BeginSemantique();
+	void BeginCodeGen();
+    void EndSemantique();
+    void EndCodeGen();
+    void test();
 %}
 
 %token IDENTIFIER
@@ -73,7 +77,7 @@ MainHead               : ClassHead BRACE_OPEN KEYWORD_PUBLIC KEYWORD_MAIN{ g_typ
                        | ClassHead BRACE_OPEN error KEYWORD_PUBLIC KEYWORD_MAIN PARENTHESE_OPEN TYPE_STRING BRACKET_OPEN BRACKET_CLOSE {syntaxerror ("public keyword missing");}
                        | ClassHead BRACE_OPEN error KEYWORD_MAIN PARENTHESE_OPEN TYPE_STRING BRACKET_OPEN BRACKET_CLOSE {syntaxerror ("public keyword missing");}
                        ;
-MainBody               : IDENTIFIER{ verifierVarID(nom);} PARENTHESE_CLOSE { foncDecEnd(); } BRACE_OPEN StatementS  BRACE_CLOSE {finFonction();} MethodDeclarationS BRACE_CLOSE {finClass();}
+MainBody               : IDENTIFIER{ verifierVarID(nom);} PARENTHESE_CLOSE { foncDecEnd(); } BRACE_OPEN StatementS  BRACE_CLOSE {finFonction();} MethodDeclarationS BRACE_CLOSE {finClass();tabCodeInt[indextab]=creerCode("SORTIE");indextab++;}
                        ;
 ClassDeclarationS	   : ClassDeclaration ClassDeclarationS
                        |
@@ -144,7 +148,7 @@ Statement              : BRACE_OPEN StatementS BRACE_CLOSE
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression PARENTHESE_CLOSE SEMI_COLON
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression PARENTHESE_CLOSE error {syntaxerror ("semicolon missing"); }
                        | KEYWORD_PRINT PARENTHESE_OPEN Expression error SEMI_COLON {syntaxerror ("closing parentheses missing"); }
-                       | Identifieraff OP_AFFECT Expression SEMI_COLON
+                       | Identifieraff OP_AFFECT Expression SEMI_COLON {tabCodeInt[indextab]=creerOp("LDC",4);indextab++;}
                        | Identifieraff OP_AFFECT Expression error {syntaxerror ("semicolon missing"); }
                        | Identifieraff OP_AFFECT error SEMI_COLON {syntaxerror ("second expression missing"); }
                        | Identifieraff error Expression SEMI_COLON{syntaxerror ("'=' expected"); }
@@ -154,7 +158,7 @@ Statement              : BRACE_OPEN StatementS BRACE_CLOSE
                        | Identifieraff BRACKET_OPEN Expression BRACKET_CLOSE error Expression SEMI_COLON {syntaxerror ("'=' expected"); }
                        | Identifieraff BRACKET_OPEN Expression BRACKET_CLOSE OP_AFFECT Expression error {syntaxerror ("semicolon missing"); }
                        ;
-Expression             : INTEGER_LITERAL ExpressionComp
+Expression             : INTEGER_LITERAL {tabCodeInt[indextab]=creerOp("LDC",4);indextab++;}ExpressionComp
                        | BOOLEAN_LITERAL ExpressionComp
                        | STRING_LITERAL ExpressionComp
                        | Identifierexp ExpressionComp
@@ -218,15 +222,16 @@ extern FILE *yyin;
 int main(int argc, char **argv)
 {
     yyin = fopen(argv[1], "r");
-    Begin();
+    BeginCodeGen();
+    BeginSemantique();
+    test();
     yyparse();
-    End();
+    EndSemantique();
+    EndCodeGen();
     return 1;
 }
 
-
-
-void Begin()
+void BeginSemantique()
 {
 	table = NULL;
 	table_local = NULL;
@@ -241,7 +246,27 @@ void Begin()
     g_IfClass = 0 ;
 }
 
-void End()
+void BeginCodeGen(){
+    indextab = 0;
+}
+void test(){
+    tabCodeInt[indextab]=creerOp("LDC",4);
+    indextab++;
+    tabCodeInt[indextab]=creerOp("STORE",0);
+    indextab++;
+    tabCodeInt[indextab]=creerOp("LDC",5);
+    indextab++;
+    tabCodeInt[indextab]=creerOp("STORE",1);
+    indextab++;
+    tabCodeInt[indextab]=creerCode("SORTIE");
+    indextab++;
+}
+
+void EndCodeGen(){
+    genererCode();
+}
+
+void EndSemantique()
 {
     fclose(yyin);
     	printf("------------------------------\n");
@@ -262,12 +287,11 @@ void End()
         printf("%d warning%c found\n",j,c);
 	}
 	printf("------------------------------\n");
-	
+
 
     destructSymbolsTable(table_local);
 	destructSymbolsTable(table);
 	destructSymbolsTable(table_class);
-	exit(0);
 }
 
 

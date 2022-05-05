@@ -1,0 +1,5 @@
+LDC 4 
+STORE 0 
+LDC 5 
+STORE 1 
+SORTIE 

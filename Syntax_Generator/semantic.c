@@ -206,7 +206,7 @@ int verifierIDDeclare (char* nom){
             noeud = chercher(nom, table);
             if( !noeud ){
                 semanticerror(concat("variable undeclared: ", nom));
-                End();
+                EndSemantique();
                 return 0;
             }else
             {
@@ -220,7 +220,7 @@ int verifierIDDeclare (char* nom){
         noeud = chercher(nom, table);
         if( !noeud ){
             semanticerror(concat("variable undeclared: ", nom));
-            End();
+            EndSemantique();
             return 0;
         }else
         {
@@ -239,7 +239,7 @@ int verifierIDDeclareOnInit (char* nom){
             noeud = chercher(nom, table);
             if( !noeud ){
                 semanticerror(concat("variable undeclared: ", nom));
-                End();
+                EndSemantique();
                 return 0;
             }
         }
@@ -247,7 +247,7 @@ int verifierIDDeclareOnInit (char* nom){
         noeud = chercher(nom, table);
         if( !noeud ){
             semanticerror(concat("variable undeclared: ", nom));
-            End();
+            EndSemantique();
             return 0;
         }
     }

@@ -59,6 +59,6 @@ void checkIDOnInit(char* nom);
 char* concat(const char* s1, char* s2);
 void semanticwarning (char *str);
 void semanticerror (const char *str);
-void End();
+void EndSemantique();
 
 #endif // SEMANTIC_H_INCLUDED

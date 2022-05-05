@@ -71,6 +71,7 @@
 #line 1 "miniJava.y"
 
     #include "semantic.c"
+    #include "codeGen.c"
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
@@ -83,12 +84,15 @@
     extern int j;
 	void yyerror(const char *str);
 	void syntaxerror (const char *str);
-	void Begin();
-    void End();
+	void BeginSemantique();
+	void BeginCodeGen();
+    void EndSemantique();
+    void EndCodeGen();
+    void test();
 
 
 /* Line 189 of yacc.c  */
-#line 92 "miniJava.tab.c"
+#line 96 "miniJava.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -167,7 +171,7 @@ typedef int YYSTYPE;
 
 
 /* Line 264 of yacc.c  */
-#line 171 "miniJava.tab.c"
+#line 175 "miniJava.tab.c"
 
 #ifdef short
 # undef short
@@ -525,20 +529,20 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    64,    64,    65,    66,    67,    68,    70,    72,    72,
-      72,    73,    74,    76,    76,    76,    76,    78,    79,    80,
-      82,    83,    84,    85,    86,    88,    89,    91,    92,    94,
-      94,    95,    97,    97,    98,    99,   100,   102,   103,   104,
-     106,   107,   108,   109,   111,   111,   111,   112,   113,   114,
-     118,   119,   120,   121,   122,   123,   124,   126,   127,   128,
-     130,   131,   132,   133,   134,   135,   136,   137,   138,   139,
-     140,   141,   142,   143,   144,   145,   146,   147,   148,   149,
-     150,   151,   152,   153,   154,   155,   157,   158,   159,   160,
-     161,   162,   163,   164,   165,   166,   167,   168,   169,   170,
-     171,   172,   173,   174,   175,   176,   177,   179,   180,   181,
-     182,   183,   184,   184,   185,   186,   187,   187,   188,   189,
-     190,   192,   194,   194,   195,   196,   198,   199,   200,   201,
-     202,   204,   206,   208
+       0,    68,    68,    69,    70,    71,    72,    74,    76,    76,
+      76,    77,    78,    80,    80,    80,    80,    82,    83,    84,
+      86,    87,    88,    89,    90,    92,    93,    95,    96,    98,
+      98,    99,   101,   101,   102,   103,   104,   106,   107,   108,
+     110,   111,   112,   113,   115,   115,   115,   116,   117,   118,
+     122,   123,   124,   125,   126,   127,   128,   130,   131,   132,
+     134,   135,   136,   137,   138,   139,   140,   141,   142,   143,
+     144,   145,   146,   147,   148,   149,   150,   151,   152,   153,
+     154,   155,   156,   157,   158,   159,   161,   162,   163,   164,
+     165,   166,   167,   168,   169,   170,   171,   172,   173,   174,
+     175,   176,   177,   178,   179,   180,   181,   183,   184,   185,
+     186,   187,   188,   188,   189,   190,   191,   191,   192,   193,
+     194,   196,   198,   198,   199,   200,   202,   203,   204,   205,
+     206,   208,   210,   212
 };
 #endif
 
@@ -1700,602 +1704,602 @@ yyreduce:
         case 3:
 
 /* Line 1455 of yacc.c  */
-#line 65 "miniJava.y"
+#line 69 "miniJava.y"
     {syntaxerror ("main class missing"); ;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 66 "miniJava.y"
+#line 70 "miniJava.y"
     {syntaxerror ("code out of class"); ;}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 67 "miniJava.y"
+#line 71 "miniJava.y"
     {syntaxerror ("code out of class"); ;}
     break;
 
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 68 "miniJava.y"
+#line 72 "miniJava.y"
     {syntaxerror ("code out of class"); ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 72 "miniJava.y"
+#line 76 "miniJava.y"
     { g_type = tVoid; verifierFoncID("main"); ;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 72 "miniJava.y"
+#line 76 "miniJava.y"
     {g_type = tString;;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 73 "miniJava.y"
+#line 77 "miniJava.y"
     {syntaxerror ("public keyword missing");;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 74 "miniJava.y"
+#line 78 "miniJava.y"
     {syntaxerror ("public keyword missing");;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 76 "miniJava.y"
+#line 80 "miniJava.y"
     { verifierVarID(nom);;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 76 "miniJava.y"
+#line 80 "miniJava.y"
     { foncDecEnd(); ;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 76 "miniJava.y"
+#line 80 "miniJava.y"
     {finFonction();;}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 76 "miniJava.y"
+#line 80 "miniJava.y"
     {finClass();;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 80 "miniJava.y"
+#line 84 "miniJava.y"
     {syntaxerror ("code out of class"); ;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 82 "miniJava.y"
+#line 86 "miniJava.y"
     {finClass();;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 83 "miniJava.y"
+#line 87 "miniJava.y"
     {syntaxerror ("parent class identifier missing"); ;}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 84 "miniJava.y"
+#line 88 "miniJava.y"
     {syntaxerror ("closing brace missing"); ;}
     break;
 
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 85 "miniJava.y"
+#line 89 "miniJava.y"
     {finClass();;}
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 86 "miniJava.y"
+#line 90 "miniJava.y"
     {syntaxerror ("closing brace missing"); ;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 88 "miniJava.y"
+#line 92 "miniJava.y"
     {verifierClassID(nom);;}
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 89 "miniJava.y"
+#line 93 "miniJava.y"
     {syntaxerror ("class keyword missing"); ;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 94 "miniJava.y"
+#line 98 "miniJava.y"
     {verifierVarID(nom);;}
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 95 "miniJava.y"
+#line 99 "miniJava.y"
     {syntaxerror ("semicolon missing"); ;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 97 "miniJava.y"
+#line 101 "miniJava.y"
     {verifierVarID(nom);;}
     break;
 
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 98 "miniJava.y"
+#line 102 "miniJava.y"
     {verifierVarID(nom);;}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 100 "miniJava.y"
+#line 104 "miniJava.y"
     {syntaxerror ("comma missing"); ;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 103 "miniJava.y"
+#line 107 "miniJava.y"
     {syntaxerror ("invalid type"); ;}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 104 "miniJava.y"
+#line 108 "miniJava.y"
     {syntaxerror ("invalid identifier"); ;}
     break;
 
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 108 "miniJava.y"
+#line 112 "miniJava.y"
     {syntaxerror ("code out of method"); ;}
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 109 "miniJava.y"
+#line 113 "miniJava.y"
     {syntaxerror ("code out of method"); ;}
     break;
 
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 111 "miniJava.y"
+#line 115 "miniJava.y"
     { verifierFoncID(nom); ;}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 111 "miniJava.y"
+#line 115 "miniJava.y"
     {foncDecEnd();;}
     break;
 
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 111 "miniJava.y"
+#line 115 "miniJava.y"
     {finFonction();;}
     break;
 
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 112 "miniJava.y"
+#line 116 "miniJava.y"
     {syntaxerror ("public keyword missing"); ;}
     break;
 
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 113 "miniJava.y"
+#line 117 "miniJava.y"
     {syntaxerror ("type missing"); ;}
     break;
 
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 114 "miniJava.y"
+#line 118 "miniJava.y"
     {syntaxerror ("method name missing"); ;}
     break;
 
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 118 "miniJava.y"
+#line 122 "miniJava.y"
     { g_type = tInt; ;}
     break;
 
   case 51:
 
 /* Line 1455 of yacc.c  */
-#line 119 "miniJava.y"
+#line 123 "miniJava.y"
     { g_type = tBoolean; ;}
     break;
 
   case 52:
 
 /* Line 1455 of yacc.c  */
-#line 120 "miniJava.y"
+#line 124 "miniJava.y"
     { g_type = tInt; ;}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 121 "miniJava.y"
+#line 125 "miniJava.y"
     { g_type = tString; ;}
     break;
 
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 122 "miniJava.y"
+#line 126 "miniJava.y"
     {syntaxerror ("closing bracket missing"); ;}
     break;
 
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 123 "miniJava.y"
+#line 127 "miniJava.y"
     {syntaxerror ("invalid array type"); ;}
     break;
 
   case 56:
 
 /* Line 1455 of yacc.c  */
-#line 124 "miniJava.y"
+#line 128 "miniJava.y"
     {syntaxerror ("opening bracket missing"); ;}
     break;
 
   case 61:
 
 /* Line 1455 of yacc.c  */
-#line 131 "miniJava.y"
+#line 135 "miniJava.y"
     {syntaxerror ("closing brace missing"); ;}
     break;
 
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 132 "miniJava.y"
+#line 136 "miniJava.y"
     {syntaxerror ("opening brace missing"); ;}
     break;
 
   case 65:
 
 /* Line 1455 of yacc.c  */
-#line 135 "miniJava.y"
+#line 139 "miniJava.y"
     {syntaxerror ("opening parentheses missing"); ;}
     break;
 
   case 66:
 
 /* Line 1455 of yacc.c  */
-#line 136 "miniJava.y"
+#line 140 "miniJava.y"
     {syntaxerror ("closing parentheses missing"); ;}
     break;
 
   case 67:
 
 /* Line 1455 of yacc.c  */
-#line 137 "miniJava.y"
+#line 141 "miniJava.y"
     {syntaxerror ("if condition missing"); ;}
     break;
 
   case 69:
 
 /* Line 1455 of yacc.c  */
-#line 139 "miniJava.y"
+#line 143 "miniJava.y"
     {syntaxerror ("closing parentheses missing"); ;}
     break;
 
   case 70:
 
 /* Line 1455 of yacc.c  */
-#line 140 "miniJava.y"
+#line 144 "miniJava.y"
     {syntaxerror ("if condition missing"); ;}
     break;
 
   case 72:
 
 /* Line 1455 of yacc.c  */
-#line 142 "miniJava.y"
+#line 146 "miniJava.y"
     {syntaxerror ("closing parentheses missing"); ;}
     break;
 
   case 73:
 
 /* Line 1455 of yacc.c  */
-#line 143 "miniJava.y"
+#line 147 "miniJava.y"
     {syntaxerror ("while condition missing"); ;}
     break;
 
   case 75:
 
 /* Line 1455 of yacc.c  */
-#line 145 "miniJava.y"
+#line 149 "miniJava.y"
     {syntaxerror ("semicolon missing"); ;}
     break;
 
   case 76:
 
 /* Line 1455 of yacc.c  */
-#line 146 "miniJava.y"
+#line 150 "miniJava.y"
     {syntaxerror ("closing parentheses missing"); ;}
     break;
 
   case 78:
 
 /* Line 1455 of yacc.c  */
-#line 148 "miniJava.y"
+#line 152 "miniJava.y"
     {syntaxerror ("semicolon missing"); ;}
     break;
 
   case 79:
 
 /* Line 1455 of yacc.c  */
-#line 149 "miniJava.y"
+#line 153 "miniJava.y"
     {syntaxerror ("second expression missing"); ;}
     break;
 
   case 80:
 
 /* Line 1455 of yacc.c  */
-#line 150 "miniJava.y"
+#line 154 "miniJava.y"
     {syntaxerror ("'=' expected"); ;}
     break;
 
   case 82:
 
 /* Line 1455 of yacc.c  */
-#line 152 "miniJava.y"
+#line 156 "miniJava.y"
     {syntaxerror ("opening bracket missing"); ;}
     break;
 
   case 83:
 
 /* Line 1455 of yacc.c  */
-#line 153 "miniJava.y"
+#line 157 "miniJava.y"
     {syntaxerror ("closing bracket missing"); ;}
     break;
 
   case 84:
 
 /* Line 1455 of yacc.c  */
-#line 154 "miniJava.y"
+#line 158 "miniJava.y"
     {syntaxerror ("'=' expected"); ;}
     break;
 
   case 85:
 
 /* Line 1455 of yacc.c  */
-#line 155 "miniJava.y"
+#line 159 "miniJava.y"
     {syntaxerror ("semicolon missing"); ;}
     break;
 
   case 92:
 
 /* Line 1455 of yacc.c  */
-#line 163 "miniJava.y"
+#line 167 "miniJava.y"
     {syntaxerror ("opening bracket missing"); ;}
     break;
 
   case 93:
 
 /* Line 1455 of yacc.c  */
-#line 164 "miniJava.y"
+#line 168 "miniJava.y"
     {syntaxerror ("invalid array type"); ;}
     break;
 
   case 94:
 
 /* Line 1455 of yacc.c  */
-#line 165 "miniJava.y"
+#line 169 "miniJava.y"
     {syntaxerror ("closing bracket missing"); ;}
     break;
 
   case 96:
 
 /* Line 1455 of yacc.c  */
-#line 167 "miniJava.y"
+#line 171 "miniJava.y"
     {syntaxerror ("invalid identifier"); ;}
     break;
 
   case 97:
 
 /* Line 1455 of yacc.c  */
-#line 168 "miniJava.y"
+#line 172 "miniJava.y"
     {syntaxerror ("opening parentheses missing"); ;}
     break;
 
   case 98:
 
 /* Line 1455 of yacc.c  */
-#line 169 "miniJava.y"
+#line 173 "miniJava.y"
     {syntaxerror ("closing parentheses missing"); ;}
     break;
 
   case 100:
 
 /* Line 1455 of yacc.c  */
-#line 171 "miniJava.y"
+#line 175 "miniJava.y"
     {syntaxerror ("invalid identifier"); ;}
     break;
 
   case 101:
 
 /* Line 1455 of yacc.c  */
-#line 172 "miniJava.y"
+#line 176 "miniJava.y"
     {syntaxerror ("opening parentheses missing"); ;}
     break;
 
   case 102:
 
 /* Line 1455 of yacc.c  */
-#line 173 "miniJava.y"
+#line 177 "miniJava.y"
     {syntaxerror ("closing parentheses missing"); ;}
     break;
 
   case 105:
 
 /* Line 1455 of yacc.c  */
-#line 176 "miniJava.y"
+#line 180 "miniJava.y"
     {syntaxerror ("opening parentheses missing"); ;}
     break;
 
   case 106:
 
 /* Line 1455 of yacc.c  */
-#line 177 "miniJava.y"
+#line 181 "miniJava.y"
     {syntaxerror ("closing parentheses missing"); ;}
     break;
 
   case 109:
 
 /* Line 1455 of yacc.c  */
-#line 181 "miniJava.y"
+#line 185 "miniJava.y"
     {syntaxerror ("closing bracket missing"); ;}
     break;
 
   case 111:
 
 /* Line 1455 of yacc.c  */
-#line 183 "miniJava.y"
+#line 187 "miniJava.y"
     {syntaxerror ("invalid .length"); ;}
     break;
 
   case 112:
 
 /* Line 1455 of yacc.c  */
-#line 184 "miniJava.y"
+#line 188 "miniJava.y"
     {foncCallEnd();;}
     break;
 
   case 114:
 
 /* Line 1455 of yacc.c  */
-#line 185 "miniJava.y"
+#line 189 "miniJava.y"
     {syntaxerror("opening parentheses missing"); ;}
     break;
 
   case 115:
 
 /* Line 1455 of yacc.c  */
-#line 186 "miniJava.y"
+#line 190 "miniJava.y"
     {syntaxerror("closing parentheses missing"); ;}
     break;
 
   case 116:
 
 /* Line 1455 of yacc.c  */
-#line 187 "miniJava.y"
+#line 191 "miniJava.y"
     {g_nbParam = 0;foncCallEnd();;}
     break;
 
   case 118:
 
 /* Line 1455 of yacc.c  */
-#line 188 "miniJava.y"
+#line 192 "miniJava.y"
     {syntaxerror ("opening parentheses missing"); ;}
     break;
 
   case 119:
 
 /* Line 1455 of yacc.c  */
-#line 189 "miniJava.y"
+#line 193 "miniJava.y"
     {syntaxerror ("closing parentheses missing"); ;}
     break;
 
   case 121:
 
 /* Line 1455 of yacc.c  */
-#line 192 "miniJava.y"
+#line 196 "miniJava.y"
     {verifierFoncIDDeclare(nom);;}
     break;
 
   case 122:
 
 /* Line 1455 of yacc.c  */
-#line 194 "miniJava.y"
+#line 198 "miniJava.y"
     {g_nbParam ++;;}
     break;
 
   case 124:
 
 /* Line 1455 of yacc.c  */
-#line 195 "miniJava.y"
+#line 199 "miniJava.y"
     {g_nbParam ++;;}
     break;
 
   case 125:
 
 /* Line 1455 of yacc.c  */
-#line 196 "miniJava.y"
+#line 200 "miniJava.y"
     {syntaxerror ("comma missing"); ;}
     break;
 
   case 132:
 
 /* Line 1455 of yacc.c  */
-#line 206 "miniJava.y"
+#line 210 "miniJava.y"
     {checkID(nom);;}
     break;
 
   case 133:
 
 /* Line 1455 of yacc.c  */
-#line 208 "miniJava.y"
+#line 212 "miniJava.y"
     {checkIDOnInit(nom);;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 2299 "miniJava.tab.c"
+#line 2303 "miniJava.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2507,7 +2511,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 213 "miniJava.y"
+#line 217 "miniJava.y"
 
 
 
@@ -2516,15 +2520,17 @@ extern FILE *yyin;
 int main(int argc, char **argv)
 {
     yyin = fopen(argv[1], "r");
-    Begin();
+    BeginCodeGen();
+    BeginSemantique();
+    test();
     yyparse();
-    End();
+    EndSemantique();
+    printf("code before");
+    EndCodeGen();
     return 1;
 }
 
-
-
-void Begin()
+void BeginSemantique()
 {
 	table = NULL;
 	table_local = NULL;
@@ -2539,7 +2545,27 @@ void Begin()
     g_IfClass = 0 ;
 }
 
-void End()
+void BeginCodeGen(){
+    indextab = 0;
+}
+void test(){
+    tabCodeInt[indextab]=creerOp("LDC",4);
+    indextab++;
+    tabCodeInt[indextab]=creerOp("STORE",0);
+    indextab++;
+    tabCodeInt[indextab]=creerOp("LDC",5);
+    indextab++;
+    tabCodeInt[indextab]=creerOp("STORE",1);
+    indextab++;
+    tabCodeInt[indextab]=creerCode("SORTIE");
+    indextab++;
+}
+
+void EndCodeGen(){
+    genererCode();
+}
+
+void EndSemantique()
 {
     fclose(yyin);
     	printf("------------------------------\n");
@@ -2560,12 +2586,11 @@ void End()
         printf("%d warning%c found\n",j,c);
 	}
 	printf("------------------------------\n");
-	
+
 
     destructSymbolsTable(table_local);
 	destructSymbolsTable(table);
 	destructSymbolsTable(table_class);
-	exit(0);
 }
 
 
